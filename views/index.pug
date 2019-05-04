@@ -1,0 +1,102 @@
+doctype html  
+html  
+  head
+    meta(http-equiv="refresh", content="10")
+    link(href='style.css', rel='stylesheet')
+  body
+    div(class='main')
+      div(class='headbar')
+        div(class='titlebar')
+          div(class='barsvg')
+            include exide_white.svg
+          h1 Vasche/Raddrizzatori Fasi(8-17) #{alarmMaxTempEightEnd} C
+        if(logged)
+          div(class='iconsettings')
+            a(href='/params'): img(src="/settings.png")
+          div(class='iconcsv')
+            a(href='/csv'): img(src="/csv.png")
+          div(class='iconlogout')
+            a(href='/logout'): img(src="/logout.png")
+        else
+          div(class='iconcsv')
+            a(href='/csv'): img(src="/csv.png")
+          div(class='iconlogin')
+            a(href='/login'): img(src="/key.png")  
+    hr
+    h3
+      if(dataEightEnd.length === 0)
+        h2 Dati non disponibili!
+      else
+        div 
+          table
+            thead
+              tr
+                th Vasca 
+                th 1
+                th 2
+                th 3
+                th 4
+                th 5
+                th 6
+                th 7
+                th 8
+                th 9
+                th 10
+                th 11
+                th 12
+            tbody
+              each row, index in dataEightEnd
+                tr
+                  td #{row[0]} 
+                  td(class={alarm: row[1][0] > alarmMaxTempEightEnd}) #{row[1][0]}
+                  td(class={alarm: row[1][1] > alarmMaxTempEightEnd}) #{row[1][1]}
+                  td(class={alarm: row[1][2] > alarmMaxTempEightEnd}) #{row[1][2]}
+                  td(class={alarm: row[1][3] > alarmMaxTempEightEnd}) #{row[1][3]}
+                  td(class={alarm: row[1][4] > alarmMaxTempEightEnd}) #{row[1][4]}
+                  td(class={alarm: row[1][5] > alarmMaxTempEightEnd}) #{row[1][5]}
+                  td(class={alarm: row[1][6] > alarmMaxTempEightEnd}) #{row[1][6]}
+                  td(class={alarm: row[1][7] > alarmMaxTempEightEnd}) #{row[1][7]}
+                  td(class={alarm: row[1][8] > alarmMaxTempEightEnd}) #{row[1][8]}
+                  td(class={alarm: row[1][9] > alarmMaxTempEightEnd}) #{row[1][9]}
+                  td(class={alarm: row[1][10] >alarmMaxTempEightEnd}) #{row[1][10]}
+                  td(class={alarm: row[1][11] >alarmMaxTempEightEnd}) #{row[1][11]}
+      div(class='main')
+        h1 Vasche/Raddrizzatori Fasi(1-7) #{alarmMaxTempOneSeven} C
+      hr
+      h3
+        if(dataOneSeven.length === 0)
+          h2 Dati non disponibili!
+        else
+          div 
+            table
+              thead
+                tr
+                  th Vasca 
+                  th 1
+                  th 2
+                  th 3
+                  th 4
+                  th 5
+                  th 6
+                  th 7
+                  th 8
+                  th 9
+                  th 10
+                  th 11
+                  th 12
+              tbody
+                each row, index in dataOneSeven
+                  tr
+                    td #{row[0]} 
+                    td(class={alarm: row[1][0] > alarmMaxTempOneSeven}) #{row[1][0]}
+                    td(class={alarm: row[1][1] > alarmMaxTempOneSeven}) #{row[1][1]}
+                    td(class={alarm: row[1][2] > alarmMaxTempOneSeven}) #{row[1][2]}
+                    td(class={alarm: row[1][3] > alarmMaxTempOneSeven}) #{row[1][3]}
+                    td(class={alarm: row[1][4] > alarmMaxTempOneSeven}) #{row[1][4]}
+                    td(class={alarm: row[1][5] > alarmMaxTempOneSeven}) #{row[1][5]}
+                    td(class={alarm: row[1][6] > alarmMaxTempOneSeven}) #{row[1][6]}
+                    td(class={alarm: row[1][7] > alarmMaxTempOneSeven}) #{row[1][7]}
+                    td(class={alarm: row[1][8] > alarmMaxTempOneSeven}) #{row[1][8]}
+                    td(class={alarm: row[1][9] > alarmMaxTempOneSeven}) #{row[1][9]}
+                    td(class={alarm: row[1][10] >alarmMaxTempOneSevene}) #{row[1][10]}
+                    td(class={alarm: row[1][11] >alarmMaxTempOneSevene}) #{row[1][11]}

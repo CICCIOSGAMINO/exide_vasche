@@ -1,0 +1,19 @@
+doctype html  
+html  
+  head
+    link(href='style.css', rel='stylesheet')
+  body
+    div(class='contenitor')
+      form(class='login' method='POST' action='/save')
+        include exide_white.svg
+        div.form-group
+          label(for='tmaxone') Tmax 1 - 7 :
+          input#tmaxone.form-control(type='number' value=tmaxone placeholder= tmaxone + ' C' name='tmaxone')
+        div.form-group
+          label(for='tmaxend') Tmax 8 - 17 :
+          input#tmaxend.form-control(type='number' value=tmaxend placeholder= tmaxend + ' C' name='tmaxend')
+        div.form-group
+          label(for='durationh') Duration :
+          input#durationh.form-control(type='number' value=durationh placeholder= durationh + ' h' name='durationh')
+        div.form-group
+        button.btn(type='submit') Save

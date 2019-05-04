@@ -1,0 +1,16 @@
+doctype html  
+html  
+  head
+    link(href='style.css', rel='stylesheet')
+  body
+    div(class='contenitor')
+      form(class='login' method='POST' action='/login')
+        include exide_white.svg
+        div.form-group
+          label(for='username') Username:
+          input#username.form-control(type='text', placeholder='username' name='username')
+        div.form-group
+          label(for='password') Password:
+          input#password.form-control(type='password' placeholder='password' name='password')
+        div.form-group
+        button.btn(type='submit') Login

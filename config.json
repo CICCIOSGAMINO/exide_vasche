@@ -1,0 +1,9 @@
+{
+  "user": {
+    "username": "exide",
+    "password": "psw@exide"
+  },
+  "alarmMaxTempOneSeven": "66",
+  "alarmMaxTempEightEnd": "61",
+  "durationh": "35"
+}

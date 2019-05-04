@@ -1,0 +1,38 @@
+doctype html  
+html  
+  head
+    meta(http-equiv="refresh", content="10")
+    link(href='style.css', rel='stylesheet')
+  body
+    div(class='main')
+      div(class='headbar')
+        div(class='titlebar')
+          div(class='barsvg')
+            include exide_white.svg
+          h1 Vasche/Raddrizzatori Durata MAX #{alarmMaxDuration}h
+        div(class='iconhome')
+          a(href='/'): img(src="/home.png")
+    hr
+    h3
+      if(csvData.length === 0)
+        h2 Dati non disponibili!
+      else
+        div 
+          table
+            thead
+              tr
+                th Vasca 
+                th Raddrizzatore
+                th Date
+                th Durata Ciclo
+                th T_MAX(1-7) C
+                th T_MAX(8-17) C
+            tbody
+              each row, index in csvData
+                tr
+                  td #{row[0]} 
+                  td #{row[1]}
+                  td(class="gmttime") #{row[2]}
+                  td(class={alarm: row[3] > alarmMaxDuration}) #{row[4]}
+                  td(class={alarm: row[5] > tmaxone}) #{row[5]}
+                  td(class={alarm: row[6] > tmaxend}) #{row[6]}
