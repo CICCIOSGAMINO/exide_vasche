@@ -374,7 +374,8 @@ app.get('/csv', (req, res, next) => {
         csvData: tempDurationBlob, 
         alarmMaxDuration: durationh,
         tmaxone: alarmMaxTempOneSeven, 
-        tmaxend: alarmMaxTempEightEnd
+        tmaxend: alarmMaxTempEightEnd,
+        logged: (req.user ? true : false)
   })
 })
 
@@ -399,6 +400,20 @@ app.get("/params", (req, res) => {
     res.render('params', {  tmaxone: alarmMaxTempOneSeven, 
                             tmaxend: alarmMaxTempEightEnd,
                             durationh: durationh })
+  } else {
+    res.render('error404')
+  }
+})
+
+app.get("/create", (req, res) => {
+  if(req.user) {
+
+    let processed = computeOneYearCsv()
+
+    res.render('create', {
+      msg: "File processati",
+      processed: processed
+    })
   } else {
     res.render('error404')
   }
@@ -505,7 +520,7 @@ fs.watch(pathCsv, (eventType, filename) => {
         })
 
 
-      }
+      } 
     } catch(err) {
       errorLogger.error(`@ERROR(CATCH) >> data.csv: ${err}`)
     }
@@ -828,6 +843,27 @@ let getRightArray = (oldArray, radd, temp) => {
   }
   oldArray[radd-1] = temp
   return oldArray 
+}
+
+let computeOneYearCsv = () => {
+  let processed = 0
+
+  /** Sync Version  */
+  fs.readdirSync(pathReg).forEach(file => {
+    
+    let stats = fs.statSync(path.join(pathReg, file))
+    // Only if file (NOT directory)
+    if(stats.isFile()) {
+      // Only last 12 months 
+      if((Date.now() - stats.mtimeMs) < 31536000000) {
+        // last modified 12 months files
+        fs.appendFileSync(path.join(pathReg, file),' ')
+        processed++
+      }
+    } 
+  })
+
+  return processed
 }
 
 /**

@@ -1,0 +1,31 @@
+doctype html  
+html  
+  head
+    link(href='style.css', rel='stylesheet')
+  body
+    div(class='main')
+      div(class='headbar')
+        div(class='titlebar')
+          div(class='barsvg')
+            include exide_white.svg
+          h1 Record Creati (.csv)
+
+          div(class='iconcreate')
+            a(href='/create'): img(src="/create.png")
+          div(class='iconhome')
+            a(href='/'): img(src="/home.png")
+    hr
+    h3
+      if(processed === 0)
+        h2 Nessun file processato!
+      else
+        div 
+          table
+            thead
+              tr
+                th Msg
+                th Processed
+            tbody
+                tr
+                  td #{msg} 
+                  td #{processed}

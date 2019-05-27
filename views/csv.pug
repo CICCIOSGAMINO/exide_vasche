@@ -1,7 +1,7 @@
 doctype html  
 html  
   head
-    meta(http-equiv="refresh", content="10")
+    meta(http-equiv="refresh", content="20")
     link(href='style.css', rel='stylesheet')
   body
     div(class='main')
@@ -10,8 +10,17 @@ html
           div(class='barsvg')
             include exide_white.svg
           h1 Vasche/Raddrizzatori Durata MAX #{alarmMaxDuration}h
-        div(class='iconhome')
-          a(href='/'): img(src="/home.png")
+
+          if(logged)
+            div(class='iconsettings')
+              a(href='/params'): img(src="/settings.png")
+            div(class='iconcreate')
+              a(href='/create'): img(src="/create.png")
+            div(class='iconlogout')
+              a(href='/logout'): img(src="/logout.png")
+          else
+            div(class='iconhome')
+              a(href='/'): img(src="/home.png")
     hr
     h3
       if(csvData.length === 0)
