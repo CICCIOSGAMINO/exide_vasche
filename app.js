@@ -1,7 +1,7 @@
 /**
  * Exide - Vasche / Raddrizzatori SW 
  */
-const version = 'v2.0.2'
+const version = 'v2.2.0'
 
 const fs = require('fs')
 const path = require('path')
@@ -854,8 +854,9 @@ let computeOneYearCsv = () => {
     let stats = fs.statSync(path.join(pathReg, file))
     // Only if file (NOT directory)
     if(stats.isFile()) {
+      let mtimeMs = new Date(stats.mtime)
       // Only last 12 months 
-      if((Date.now() - stats.mtimeMs) < 31536000000) {
+      if((Date.now() - mtimeMs) < 31536000000) {
         // last modified 12 months files
         fs.appendFileSync(path.join(pathReg, file),' ')
         processed++

@@ -15,7 +15,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 /**
  * Exide - Vasche / Raddrizzatori SW 
  */
-var version = 'v2.0.2';
+var version = 'v2.2.0';
 
 var fs = require('fs');
 
@@ -1373,8 +1373,9 @@ var computeOneYearCsv = function computeOneYearCsv() {
     var stats = fs.statSync(path.join(pathReg, file)); // Only if file (NOT directory)
 
     if (stats.isFile()) {
-      // Only last 12 months 
-      if (Date.now() - stats.mtimeMs < 31536000000) {
+      var mtimeMs = new Date(stats.mtime); // Only last 12 months 
+
+      if (Date.now() - mtimeMs < 31536000000) {
         // last modified 12 months files
         fs.appendFileSync(path.join(pathReg, file), ' ');
         processed++;
