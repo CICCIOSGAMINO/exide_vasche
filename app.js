@@ -1,24 +1,25 @@
 /**
  * Exide - Vasche / Raddrizzatori SW 
  */
-const version = 'v2.2.0'
+const version = 'v3.3.0';
 
-const fs = require('fs')
-const path = require('path')
-const readline = require('readline')
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const readline = require('readline');
 
 // Load config file 
-const CONFIG_FILE = 'config.json'
+const CONFIG_FILE = 'config.json';
 let config = JSON.parse(fs.readFileSync(`./${CONFIG_FILE}`, 'utf8'));
-let User = config.user
+let User = config.user;
 
-const session = require('express-session')
-const express = require('express')
-const app = express()
-const port = 8080
+const session = require('express-session');
+const express = require('express');
+const app = express();
+const port = 8080;
 
 // Winston Logger 
-const winston = require('winston')
+const winston = require('winston');
 
 // Winston - Creating Info Logger on Console 
 const infoLogger = new (winston.Logger)({
@@ -26,25 +27,25 @@ const infoLogger = new (winston.Logger)({
     new (winston.transports.Console),
     new (winston.transports.File)({ filename: 'logs/info.log' })
   ]
-})
+});
 
 // Winston - Creataing Error/Warning Logger on File 
 const errorLogger = new (winston.Logger)({
   transports: [
     new (winston.transports.File)({ filename: 'logs/errors.log' })
   ]
-})
+});
 
 winston.handleExceptions(
   new winston.transports.File({ filename: 'logs/exceptions.log' })
-)
+);
 
 // Path to ../csv/data.csv
-const pathCsv = path.join(__dirname, 'csv', 'data.csv')
+const pathCsv = path.join(__dirname, 'csv', 'data.csv');
 // Path to ../reg
-const pathReg = path.join(__dirname, 'reg')
+const pathReg = path.join(__dirname, 'reg');
 // Path to ../reg/temp
-const pathRegTemp = path.join(__dirname, 'reg', 'temp')
+const pathRegTemp = path.join(__dirname, 'reg', 'temp');
 
 const vasche = [
   ["1" , {vasca: 301, raddrizzatore: 1}],
@@ -287,32 +288,42 @@ const vasche = [
   ["238" , {vasca: 320, raddrizzatore: 10}],
   ["239" , {vasca: 320, raddrizzatore: 11}],
   ["240" , {vasca: 320, raddrizzatore: 12}]
-]
+];
 
 // Map with Raddrizzatori ID binding with the Vasca and Raddrizzatore number 
-var vascheMap = new Map(vasche)
+var vascheMap = new Map(vasche);
 // Map with the Web Data [Vasca, [0, 0, 0, 0, 52.29, 0, 0, 0, 0, 49, 0, 0]]
-var tempPhaseOneSevenMap = new Map()
-var tempPhaseEightEndMap = new Map()
+var tempPhaseOneSevenMap = new Map();
+var tempPhaseEightEndMap = new Map();
 // Map the Value Duration, Tmax1-7, Tmax8-17 from data.csv file 
-var tempDurationOneSevenMap = new Map()
-var tempOneSevenBlob = []
-var tempEightEndBlob = []
-var tempDurationBlob = []
+var tempDurationOneSevenMap = new Map();
+var tempOneSevenBlob = [];
+var tempEightEndBlob = [];
+var tempDurationBlob = [];
 
 // Set the Temperature MAX (red the background in web page)
-let alarmMaxTempOneSeven = config.alarmMaxTempOneSeven
-let alarmMaxTempEightEnd = config.alarmMaxTempEightEnd
-let durationh = config.durationh
+let alarmMaxTempOneSeven = config.alarmMaxTempOneSeven;
+let alarmMaxTempEightEnd = config.alarmMaxTempEightEnd;
+let durationh = config.durationh;
 
 // Prevent the Double event on fs.watch 
-let doNotDoubleWatchOne = false
-let doNotDoubleWatchTwo = false
-let doNotDoubleWatchThree = false
+let doNotDoubleWatchOne = false;
+let doNotDoubleWatchTwo = false;
+let doNotDoubleWatchThree = false;
+
+// -----------------------------------------    OS   -----------------------------------------
+let strEncoding = 'utf8';
+if(os.platform() === 'win32') {
+  let [dwMajorVersion, dwMinorVersion, dwBuildNumber] = os.release().split(".").map(Number);
+  if(dwMajorVersion < 6) {
+    infoLogger.info(`@MACHINE >> ${os.platform()} - ${dwMajorVersion}`);
+    strEncoding = 'binary';
+  }
+}
 
 // ----------------------------------------- Passport ----------------------------------------
 // Passport (Authentication)
-var passport = require('passport')
+var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy 
 
 passport.use(new LocalStrategy(
@@ -328,35 +339,35 @@ passport.use(new LocalStrategy(
 
     return done(null, User)
   }
-))
+));
 
 passport.serializeUser((user, done) => {
   done(null, User.username)
-})
+});
 
 passport.deserializeUser((id, done) => {
   done(null, User)
-})
+});
 
 // ----------------------------------------- Express ------------------------------------------
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'public')));
 
 // express-session must be used before passport 
 app.use(session({
   secret: 'CICCIO',
   resave: false,
   saveUninitialized: false
-}))
+}));
 
 // Support JSON & URL encoded bodies middleware
-app.use(express.json())
+app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-app.use(passport.initialize())
+app.use(passport.initialize());
 app.use(passport.session());
 
-app.set('views', path.join(__dirname, 'views'))
-app.set('view engine', 'pug')
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
 
 app.get('/', (req, res, next) => {
     res.render('index', { 
@@ -367,7 +378,7 @@ app.get('/', (req, res, next) => {
         logged: (req.user ? true : false),
         version: version
       })
-})
+});
 
 app.get('/csv', (req, res, next) => {
   res.render('csv', {
@@ -377,7 +388,7 @@ app.get('/csv', (req, res, next) => {
         tmaxend: alarmMaxTempEightEnd,
         logged: (req.user ? true : false)
   })
-})
+});
 
 app.get('/login', (req, res) => {
 
@@ -386,13 +397,13 @@ app.get('/login', (req, res) => {
   } else {
     res.render('login', {})
   }
-})
+});
 
 app.post("/login", 
   passport.authenticate('local', {  failureRedirect: '/login' }),
   (req, res) => {
     res.redirect('/')
-})
+});
 
 app.get("/params", (req, res) => {
   // Check auth 
@@ -403,7 +414,7 @@ app.get("/params", (req, res) => {
   } else {
     res.render('error404')
   }
-})
+});
 
 app.get("/create", (req, res) => {
   if(req.user) {
@@ -417,7 +428,7 @@ app.get("/create", (req, res) => {
   } else {
     res.render('error404')
   }
-})
+});
 
 app.post("/save", (req, res) => {
   if(!isNaN(req.body.durationh) && !isNaN(req.body.tmaxone) && !isNaN(req.body.tmaxend)) {
@@ -430,26 +441,26 @@ app.post("/save", (req, res) => {
   } else {
     res.redirect("/")
   }
-})
+});
 
 app.get("/error", (req, res) => {
   res.render('error404', {})
-})
+});
 
 app.get("/logout", (req, res) => {
   req.logout()
   res.redirect('/')
-})
+});
 
 app.all('*', (req, res) => {
   res.redirect('/error')
-})
+});
 
 app.listen(port, () => {
   infoLogger.info(`@SERVER >> ACTIVE ON PORT:${port}`)
-})
+});
 
-let tmp = ""
+let tmp = "";
 
 let updateConfigFile = () => {
 
@@ -463,7 +474,7 @@ let updateConfigFile = () => {
   let data = JSON.stringify(newConfig, null, 2)
 
   fs.writeFileSync(CONFIG_FILE, data)
-}
+};
 
 // ------------------------------------- Watching csv/data.csv --------------------------
 fs.watch(pathCsv, (eventType, filename) => {
@@ -526,7 +537,7 @@ fs.watch(pathCsv, (eventType, filename) => {
     }
   } // End doNotDoubleWatchThree 
 
-})
+});
 
 /**
  * Update the Blob of CSV table - Prepare the data for the Pug template 
@@ -538,119 +549,117 @@ let updateCsvBlob = () => {
     let [date, durath, durations, maxtone, maxtend] = value
     tempDurationBlob.push([vasca, radd, date, durath, durations, maxtone, maxtend])
   }
-}
+};
 
 
 // ------------------------------------- Watching /reg ----------------------------------
 // Files write at the end of process 
 fs.watch(pathReg, (eventType, filename) => {
 
-  doNotDoubleWatchOne = !doNotDoubleWatchOne
+  doNotDoubleWatchOne = !doNotDoubleWatchOne;
 
-  if(doNotDoubleWatchOne && filename != tmp) {
+  if(doNotDoubleWatchOne) {
 
-  tmp = filename
+  // If is a valid string 
+  if(typeof filename === 'string' || filename instanceof String) {
 
-  // recomponse file name due to problem with windows XP win1252 encoding
-  let buffFilename = `${Buffer(filename, 'binary').toString()}`           // Windows XP Windows XP Windows XP Windows XP
-  // Linux/Windows10 env you can use filename 
-  // let buffFilename = filename                       // Linux Linux Linux Linux Linux Linux Linux Linux Linux Linux Linux
-  let p = path.join(pathReg, buffFilename)
-  
-  // If is a file process it or skip if folder 
-  if(path.parse(p).ext === '.TRR' || path.parse(p).ext === '.trr') {
+    let buffFilename = Buffer.from(filename, strEncoding);
+    let p = path.join(pathReg, buffFilename.toString());
+    
+    // If is a file process it or skip if folder 
+    if(path.parse(p).ext === '.TRR' || path.parse(p).ext === '.trr') {
 
-    // Extract values from file.name eg. numbers for vasca, radd etc  >> 115 308,5,5559,20,02,08,03,11,2016
-    let [id, vasc, radd, battery, ...date]  = filename.match(/^\d+|\d+\b|\d+(?=\w)/g)
+      // Extract values from file.name eg. numbers for vasca, radd etc  >> 115 308,5,5559,20,02,08,03,11,2016
+      let [id, vasc, radd, battery, ...date]  = buffFilename.toString().match(/^\d+|\d+\b|\d+(?=\w)/g);
 
-    // If File Exist and File_Name parsed correct open it 
-    try {
-      if(vasc !== 'undefined' && fs.existsSync(p)) {
-        
-        // Create the LineReader and the ReadStream
-        let readStream = fs.createReadStream(p)
-        let lineReader = readline.createInterface({
-          input: readStream
-        })
+      // If File Exist and File_Name parsed correct open it 
+      try {
+        if(vasc !== 'undefined' && fs.existsSync(p)) {
+          
+          // Create the LineReader and the ReadStream
+          let readStream = fs.createReadStream(p);
+          let lineReader = readline.createInterface({
+            input: readStream
+          });
 
-        // Two MAX temp one for Phase 1-7 one for phase 8-17
-        let maxTempPhaseEightEnd = 0.0
-        let maxTempPhaseOneSeven = 0.0
-        let startDate = new Date()
-        let endDate = new Date(0)
+          // Two MAX temp one for Phase 1-7 one for phase 8-17
+          let maxTempPhaseEightEnd = 0.0;
+          let maxTempPhaseOneSeven = 0.0;
+          let startDate = new Date();
+          let endDate = new Date(0);
 
-        // Read the line from file 
-        lineReader.on('line', (line) => {
+          // Read the line from file 
+          lineReader.on('line', (line) => {
 
-          let [status, type, nphase, datePhase, tprg, ibat, vbat, tbat, vout, faults] = line.trim().split(';')
-          let jsDate = new Date(datePhase)
+            let [status, type, nphase, datePhase, tprg, ibat, vbat, tbat, vout, faults] = line.trim().split(';');
+            let jsDate = new Date(datePhase);
 
-          // Check good reading (easy one only on first three fields)
-          if(status !== 'undefined' && type !== 'undefined' && nphase !== 'undefined' && !isNaN(jsDate)) {
-            let phase = parseInt(nphase)
-            let temp = parseFloat(tbat.replace(',','.')).toPrecision(4)
+            // Check good reading (easy one only on first three fields)
+            if(status !== 'undefined' && type !== 'undefined' && nphase !== 'undefined' && !isNaN(jsDate)) {
+              let phase = parseInt(nphase);
+              let temp = parseFloat(tbat.replace(',','.')).toPrecision(4);
 
-            // Find the Process endDate as starting from 1970 to raise 
-            if(jsDate > endDate) {
-              endDate = jsDate
-            }
-            // Find the Process startDate starting from now() to low down 
-            if(jsDate < startDate) {
-              startDate = jsDate
-            }
-            // Compute the MaxT in Phase 1-7 
-            if(phase >= 1 && phase < 8) {
-              if(maxTempPhaseOneSeven <= temp) {
-                maxTempPhaseOneSeven = temp
+              // Find the Process endDate as starting from 1970 to raise 
+              if(jsDate > endDate) {
+                endDate = jsDate;
               }
-            }
-            // Compute the MaxT in Phase 8-17
-            if(phase >= 8) {
-              if(maxTempPhaseEightEnd <= temp) {
-                maxTempPhaseEightEnd = temp
+              // Find the Process startDate starting from now() to low down 
+              if(jsDate < startDate) {
+                startDate = jsDate;
               }
+              // Compute the MaxT in Phase 1-7 
+              if(phase >= 1 && phase < 8) {
+                if(maxTempPhaseOneSeven <= temp) {
+                  maxTempPhaseOneSeven = temp;
+                }
+              }
+              // Compute the MaxT in Phase 8-17
+              if(phase >= 8) {
+                if(maxTempPhaseEightEnd <= temp) {
+                  maxTempPhaseEightEnd = temp;
+                }
+              }
+
+              
             }
 
-            
-          }
+          }).on('close', () => {
 
-        }).on('close', () => {
+            // Check Good values before writing them (easy one only two fields)
+            if(vasc !== 'undefined' && radd !== 'undefined' && (endDate - startDate) > 0 ) {
 
-          // Check Good values before writing them (easy one only two fields)
-          if(vasc !== 'undefined' && radd !== 'undefined' && (endDate - startDate) > 0 ) {
+              // Shape the data you need 
+              let durationMins = parseInt((endDate - startDate) / 1000 / 60);
+              let durationSec = durationMins % 60;
+              let durationHours = parseInt(durationMins / 60);
+              let duration = `${durationHours}h ${durationMins % 60}min`;
 
-            // Shape the data you need 
-            let durationMins = parseInt((endDate - startDate) / 1000 / 60);
-            let durationSec = durationMins % 60;
-            let durationHours = parseInt(durationMins / 60);
-            let duration = `${durationHours}h ${durationMins % 60}min`;
-
-            let data = {
-              vasca: parseInt(vasc),
-              radd: parseInt(radd),
-              battery: battery,
-              startDate: startDate,
-              endDate: endDate,
-              duration: duration,
-              maxTempPhaseOneSeven: maxTempPhaseOneSeven,
-              maxTempPhaseEightEnd: maxTempPhaseEightEnd
+              let data = {
+                vasca: parseInt(vasc),
+                radd: parseInt(radd),
+                battery: battery,
+                startDate: startDate,
+                endDate: endDate,
+                duration: duration,
+                maxTempPhaseOneSeven: maxTempPhaseOneSeven,
+                maxTempPhaseEightEnd: maxTempPhaseEightEnd
+              };
+    
+              writeOnCsv(data);
             }
-  
-            writeOnCsv(data)
-          }
 
-          readStream.destroy()
-        })
+            readStream.destroy();
+          });
 
 
+        }
+
+      } catch(err) {
+        errorLogger.error(`@ERROR(CATCH) >> ${err}`);
       }
-
-    } catch(err) {
-      errorLogger.error(`@ERROR(CATCH) >> ${err}`)
     }
   }
-
-}   // End doNotDoubleWatchOne
+  }
 })
 
 
@@ -658,83 +667,87 @@ fs.watch(pathReg, (eventType, filename) => {
 // Files write in real-time during the cycle phase 1 -> 17 
 fs.watch(pathRegTemp,(eventType, filename) => {
 
-    doNotDoubleWatchTwo = !doNotDoubleWatchTwo
+    doNotDoubleWatchTwo = !doNotDoubleWatchTwo;
 
     if(doNotDoubleWatchTwo) {
 
-    let buffFilename = `${Buffer(filename, 'binary').toString()}`   // Windows 10 Windows 10 Windows 10 Windows 10
-    // let buffFilename = filename                                       // Linux Linux  Linux Linux  Linux  Linux  Linux 
-    let p = path.join(pathRegTemp, buffFilename)
-    let mapKey = path.parse(filename).name
+      if(typeof filename === 'string' || filename instanceof String) {
 
-    // If is a file process it or skip if folder 
-    if(path.parse(p).ext === '.TRR' && vascheMap.has(mapKey)) {
-      
-      let { vasca, raddrizzatore } = vascheMap.get(mapKey)
+        let buffFilename = Buffer.from(filename, strEncoding)   
+        let p = path.join(pathRegTemp, buffFilename.toString())
 
-      try {
-        // Read the file if not deleted or missing 
-        if(fs.existsSync(p)) {
+        // If is a file process it or skip if folder 
+        if(path.parse(p).ext === '.TRR' || path.parse(p).ext === '.trr') {
 
-          let readStream = fs.createReadStream(p)
-          let lineReader = readline.createInterface({
-            input: readStream
-          })
+          let mapKey = path.parse(filename).name;
 
-          // Two MAX temp one for Phase 1-7 one for phase 8-17
-          let maxTempPhaseEightEnd = 0.0
-          let maxTempPhaseOneSeven = 0.0
+          if(vascheMap.has(mapKey)) {
+          
+            let { vasca, raddrizzatore } = vascheMap.get(mapKey);
 
-          // Get the vars i need from into the file 
-          lineReader.on('line', (line) => {
-            let phase = parseInt(line.trim().split(';')[2])
+            try {
+              // Read the file if not deleted or missing 
+              if(fs.existsSync(p)) {
 
-            //  Reset the Temperature MAX when new Phase 1 is found 
-            if(phase == 1) {
-              maxTempPhaseEightEnd = 0.0
-              maxTempPhaseOneSeven = 0.0
-            } 
+                let readStream = fs.createReadStream(p);
+                let lineReader = readline.createInterface({
+                  input: readStream
+                });
 
-            // Handle the  1 < Phase > 8 to search for Temperature MAX 
-            if(phase > 1 && phase < 8) {
-              let temp = parseFloat(line.trim().split(';')[7].replace(",",".")).toPrecision(4)
-              if(maxTempPhaseOneSeven <= temp) {
-                maxTempPhaseOneSeven = temp
-              }
+                // Two MAX temp one for Phase 1-7 one for phase 8-17
+                let maxTempPhaseEightEnd = 0.0;
+                let maxTempPhaseOneSeven = 0.0;
+
+                // Get the vars i need from into the file 
+                lineReader.on('line', (line) => {
+                  let phase = parseInt(line.trim().split(';')[2]);
+
+                  //  Reset the Temperature MAX when new Phase 1 is found 
+                  if(phase == 1) {
+                    maxTempPhaseEightEnd = 0.0;
+                    maxTempPhaseOneSeven = 0.0;
+                  } 
+
+                  // Handle the  1 < Phase > 8 to search for Temperature MAX 
+                  if(phase > 1 && phase < 8) {
+                    let temp = parseFloat(line.trim().split(';')[7].replace(",",".")).toPrecision(4)
+                    if(maxTempPhaseOneSeven <= temp) {
+                      maxTempPhaseOneSeven = temp;
+                    }
+                  }
+
+                  // Handle the Phase >= 8 to search for Temperature MAX
+                  if(phase >= 8) {
+                    let temp = parseFloat(line.trim().split(';')[7].replace(",",".")).toPrecision(4)
+                    if(maxTempPhaseEightEnd <= temp) {
+                      maxTempPhaseEightEnd = temp;
+                    }
+                  }
+                }).on('close', () => {
+
+                    // Add the new maxTempPhaseOneSeven to the temp Map 
+                    tempPhaseOneSevenMap.set(vasca, getRightArray(
+                      tempPhaseOneSevenMap.get(vasca),raddrizzatore, maxTempPhaseOneSeven));
+                    // Add/Update maxTempPhaseEightEnd to the temp Map
+                    tempPhaseEightEndMap.set(vasca, getRightArray(
+                        tempPhaseEightEndMap.get(vasca), raddrizzatore, maxTempPhaseEightEnd));
+
+                    // Update the blobs for Web View
+                    rewriteTemperature();
+
+                    readStream.destroy();
+
+                })
             }
+          } catch(err) {
+            errorLogger.error(`@ERROR(CATCH) >> ${err}`);
+          }
 
-            // Handle the Phase >= 8 to search for Temperature MAX
-            if(phase >= 8) {
-              let temp = parseFloat(line.trim().split(';')[7].replace(",",".")).toPrecision(4)
-              if(maxTempPhaseEightEnd <= temp) {
-                maxTempPhaseEightEnd = temp
-              }
-            }
-          }).on('close', () => {
-
-              // Add the new maxTempPhaseOneSeven to the temp Map 
-              tempPhaseOneSevenMap.set(vasca, getRightArray(
-                tempPhaseOneSevenMap.get(vasca),raddrizzatore, maxTempPhaseOneSeven))
-              // Add/Update maxTempPhaseEightEnd to the temp Map
-              tempPhaseEightEndMap.set(vasca, getRightArray(
-                  tempPhaseEightEndMap.get(vasca), raddrizzatore, maxTempPhaseEightEnd))
-
-              // Update the blobs for Web View
-              rewriteTemperature()
-
-              readStream.destroy()
-
-          })
+        }
       }
-    } catch(err) {
-      errorLogger.error(`@ERROR(CATCH) >> ${err}`)
     }
-
-
-    }
-  
-}   // End doNotDoubleWatchTwo
-})
+  }   // End doNotDoubleWatchTwo
+});
 
 
 /**
@@ -745,7 +758,7 @@ fs.watch(pathRegTemp,(eventType, filename) => {
  */
 let writeOnCsv = (data) => {
   // Prepare the blob of data (easy formatting)
-  let blob = `${data.vasca};${data.radd};${data.battery};${data.startDate};${data.duration};${data.maxTempPhaseOneSeven};${data.maxTempPhaseEightEnd}\r\n`
+  let blob = `${data.vasca};${data.radd};${data.battery};${data.startDate};${data.duration};${data.maxTempPhaseOneSeven};${data.maxTempPhaseEightEnd}\r\n`;
 
   // Reading the file (we don't want duplicate)
   try {
@@ -754,24 +767,24 @@ let writeOnCsv = (data) => {
 
       // File exist read > update line if needed > append if new line 
       // const readStream = fs.createReadStream(pathCsv)
-      let readStream = fs.createReadStream(pathCsv)
+      let readStream = fs.createReadStream(pathCsv);
       let lineReader = readline.createInterface({
         input: readStream
-      })
+      });
 
-      let match = false
+      let match = false;
 
       // If i find same line i stopped the process to update file, or append new
       lineReader.on('line', (line) => {
           
           // Do NOT duplicate the line in CSV file 
-          let [csvVasca, csvRadd, csvBatt, csvDate, csvDuration, csvTemp1, csvTemp8] = line.trim().split(';')
+          let [csvVasca, csvRadd, csvBatt, csvDate, csvDuration, csvTemp1, csvTemp8] = line.trim().split(';');
           // Be Careful with the Date object, use the getTime() method to compare 
           if  (parseInt(csvVasca) == data.vasca && parseInt(csvRadd) == data.radd && 
                 csvBatt == data.battery && data.startDate.getTime() == new Date(csvDate).getTime()) {
 
-                match = true
-                lineReader.close()
+                match = true;
+                lineReader.close();
           }
 
       }).on('close', () => {
@@ -780,27 +793,25 @@ let writeOnCsv = (data) => {
 
           fs.appendFile(pathCsv, blob, (err) => {
             if(err) errorLogger.error(`@ERROR >> WRITE_CSV: ${err}`)
-            // infoLogger.info(`@MSG >> CREATED data.csv`)
           }) 
 
         }
 
-        readStream.destroy()
+        readStream.destroy();
       })
 
       
     } else {
       // File NOT found Create the file with the CSV HEAD and data in first line
-      let head = `VASCA;RADD;BATTERY;DATA_START;DURATA;T_MAX_1_7;T_MAX_8_17`
-      let newLine =  `${head}\r\n${blob}`
+      let head = `VASCA;RADD;BATTERY;DATA_START;DURATA;T_MAX_1_7;T_MAX_8_17`;
+      let newLine =  `${head}\r\n${blob}`;
       
       fs.writeFile(pathCsv, newLine, (err) => {
-        if(err) errorLogger.error(`@ERROR >> WRITE_CSV: ${err}`)
-        // infoLogger.info(`@MSG >> CREATED data.csv`)
-      }) 
+        if(err) errorLogger.error(`@ERROR >> WRITE_CSV: ${err}`);
+      }); 
     }
   } catch(err) {
-    errorLogger.error(`@ERROR(CATCH) >> ${err}`)
+    errorLogger.error(`@ERROR(CATCH) >> ${err}`);
   } 
 }
 
@@ -810,24 +821,24 @@ let writeOnCsv = (data) => {
   */
  let rewriteTemperature = () => {
       // prepare the stream of UTF-8 CSV data 
-      let blob = ""
-      tempOneSevenBlob = []
-      tempEightEndBlob = []
+      let blob = "";
+      tempOneSevenBlob = [];
+      tempEightEndBlob = [];
 
       for(let [key, value] of tempPhaseOneSevenMap) {
         // Prepare blob to file 
-        blob = blob + `${key} | ${value}\n`
+        blob = blob + `${key} | ${value}\n`;
 
         // Prepare blob to Web
-        tempOneSevenBlob.push([key,value])
+        tempOneSevenBlob.push([key,value]);
       }
 
       for(let [key, value] of tempPhaseEightEndMap) {
         // Prepare blob to file 
-        blob = blob + `${key} | ${value}\n`
+        blob = blob + `${key} | ${value}\n`;
 
         // Prepare blob to Web
-        tempEightEndBlob.push([key,value])
+        tempEightEndBlob.push([key,value]);
       }
  }
 
@@ -839,33 +850,37 @@ let writeOnCsv = (data) => {
 let getRightArray = (oldArray, radd, temp) => {
 
   if(typeof oldArray == 'undefined') {
-    oldArray = [0,0,0,0,0,0,0,0,0,0,0,0]
+    oldArray = [0,0,0,0,0,0,0,0,0,0,0,0];
   }
-  oldArray[radd-1] = temp
-  return oldArray 
+  oldArray[radd-1] = temp;
+  return oldArray;
 }
 
 let computeOneYearCsv = () => {
-  let processed = 0
+  let processed = 0;
 
   /** Sync Version  */
   fs.readdirSync(pathReg).forEach(file => {
     
-    let stats = fs.statSync(path.join(pathReg, file))
+    // KEEP LOW MEMORY 
+    let stats = fs.statSync(path.join(pathReg, file));
     // Only if file (NOT directory)
     if(stats.isFile()) {
-      let mtimeMs = new Date(stats.mtime)
-      // Only last 12 months 
-      if((Date.now() - mtimeMs) < 31536000000) {
-        // last modified 12 months files
-        fs.appendFileSync(path.join(pathReg, file),' ')
-        processed++
-      }
-    } 
-  })
 
-  return processed
-}
+      let btimeMs = new Date(stats.birthtime);
+      // Only last 12 months 
+      if((Date.now() - btimeMs) < 5184000000) {
+
+        // last modified 12 months files
+        fs.appendFileSync(path.join(pathReg, file),' ');
+        processed++;
+      }
+    };
+
+  });
+
+  return processed;
+};
 
 /**
  * Log when Exit from proces 
@@ -878,7 +893,7 @@ process.on('exit', (code) => {
  * Extreme handling the Uncaught Exceptions 
  */
 process.on('uncaughtException', (err) => {
-  errorLogger.error(`@EXTREME >> ${err}`)
+  errorLogger.error(`@EXTREME >> ${err}`);
 })
 
 
