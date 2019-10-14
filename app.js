@@ -1,7 +1,7 @@
 /**
  * Exide - Vasche / Raddrizzatori SW 
  */
-const version = 'v3.3.0';
+const version = 'v4.0.0';
 
 const fs = require('fs');
 const os = require('os');
@@ -22,23 +22,23 @@ const port = 8080;
 const winston = require('winston');
 
 // Winston - Creating Info Logger on Console 
-const infoLogger = new (winston.Logger)({
+const infoLogger = winston.createLogger({
+  level: 'info',
+  format: winston.format.simple(),
   transports: [
-    new (winston.transports.Console),
-    new (winston.transports.File)({ filename: 'logs/info.log' })
-  ]
-});
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: 'logs/info.log' })
+  ],
+  exitOnError: true
+}); 
 
-// Winston - Creataing Error/Warning Logger on File 
-const errorLogger = new (winston.Logger)({
+const errorLogger = winston.createLogger({
+  level: 'error',
+  format: winston.format.json(),
   transports: [
-    new (winston.transports.File)({ filename: 'logs/errors.log' })
+    new winston.transports.File({ filename: 'logs/errors.log' })
   ]
-});
-
-winston.handleExceptions(
-  new winston.transports.File({ filename: 'logs/exceptions.log' })
-);
+})
 
 // Path to ../csv/data.csv
 const pathCsv = path.join(__dirname, 'csv', 'data.csv');
@@ -319,6 +319,8 @@ if(os.platform() === 'win32') {
     infoLogger.info(`@MACHINE >> ${os.platform()} - ${dwMajorVersion}`);
     strEncoding = 'binary';
   }
+} else {
+  infoLogger.info(`@MACHINE >> ${os.platform()}`);
 }
 
 // ----------------------------------------- Passport ----------------------------------------

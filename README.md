@@ -3,41 +3,23 @@ Exide - Vasche / Raddrizzatori T°C Max
 [TOC]
 
 ## Pre Requisiti 
-Il software contenuto in questa cartella può funzionare con Node.js v5.12.0 (transpiledApp.js) file oppure con Node.js v8.3.0 
-(app.js), quindi una delle due versioni deve essere installata sul pc per poter eseguire correttamente il software. La cartella principale in cui copiare gli scripts e le cartelle come descritto di seguito è C:/Programmi/APO3000/
+Il software contenuto in questa cartella può funzionare con Node.js v12.1.1, nelle versioni precedenti la 4.0.0 è possibile trovare anche un file transpilledApp.js utilizzabile con node.js v5.12.0 (Windows XP), la versione node.js v12 deve essere installata sul pc per poter eseguire correttamente il software. La cartella principale in cui copiare gli scripts e le cartelle come descritto di seguito è C:/APO3000/
 
-+ File transpiledApp.js oppure app.js dipende dalla versione di Node.js installata
++ File app.js v4.0.0 o superiore
 + Verificare la presenza della cartella /reg/temp con i file .TRR su cui si trovano i dati
 + Creare una cartella di nome **views** (index.pug, login.pug, params.pug, error404.pug, csv.pug)
 + Creare una cartella di nome **public** (style.css, home.png, key.png, csv.png) 
 + Creare una cartella **csv** in cui sarà salvato il file **data.csv** 
 + Copiare all'interno della cartella principale il file **package.json**
 
-## Node.js v5.12.0
-Versione di Node.js supportata anche da Windows XP (non senza problemi), per contrallare che la versione di Node.js corrisponda, si può eseguire nella finestra bash (MS-DOS) di windows il comando :
+## Node.js v12.1.1
+Se la versione di Node.js è uguale o migliore della versione 12.1.1 si installano i file all'interno della cartella del software APO3000 come da passo precedente, il file che avvierà l'applicazione tramite node.js engine è **app.js** che lancia in run l'applicazione :
 
 ```bash
-node --version
->> v5.12.0
-```
-
-Se la versione non corrisponde oppure il programma non risulta installato basta cercare e installare la versione 4.9.1. Con la 
-versione 5.12.0 installata e seguiti i passi dei Pre Requisiti ora si copia il file **transpiledApp.js** all'interno della 
-cartella in cui c'è il software che rileva i dati delle vasche ( C:/Programmi/APO3000/ ). Ora si può eseguire l'applicazione lanciando il comando da linea di comando all'interno della cartella con il file **transpiledApp.js** : 
-
-```bash
+# install all the app dependencies 
 npm install 
 
-node transpiledApp.js
-```
-
-## Node.js v12.0.0
-Se la versione di Node.js è uguale o migliore della versione 12.0.0 si eseguono le stesse procedure del passo precedente ma 
-in questo caso il file da utilizzare **NON** è il file transpiledApp.js ma il file **app.js** che ca copiato all'interno della cartella del software che rileva i dati delle vasche, eseguiti i Pre Requisiti si lancia in run l'applicazione :
-
-```bash
-npm install 
-
+# start the application 
 node app.js
 ```
 
@@ -52,7 +34,9 @@ localhost:8080
 Questo è l'indirizzo su cui localmente è attivo il servizio di Web Server utilizzato per visualizzare la pagina html con la tabella riguardante la temperatura massima di vasche e raddrizzatori. Quando l'applicazione è in running senza errori inserendo l'indirizzo **localhost:8080** nella barra degli indirizzi di qualsiasi browser web presente sul computer si visualizzerano in tempo aggiornato (10sec) i dati sulla temperatura massima dei raddrizzatori nelle vasche. 
 
 ## Errori 
-Nel caso in cui al comando di lancio dell'applicazione o durante il suo funzionamento si presentino errori che fermano l'applicazione, prendere nota dell'errore presentato e aprire un Issue nella pagina progetto di [Issue](https://github.com/CICCIOSGAMINO/my_scripts/issues)
+Nel caso in cui al comando di lancio dell'applicazione o durante il suo funzionamento si presentino errori che fermano l'applicazione, prendere nota dell'errore presentato e aprire un Issue nella pagina progetto di [Issue](https://github.com/CICCIOSGAMINO/my_scripts/issues). 
+
+Gli errori e le eccezzioni che causano l'arresto dell'applicazione sono tracciati all'interno del file di log presente al percorso **/logs/errors.log**. 
 
 
 ## Script as a Windows Service
