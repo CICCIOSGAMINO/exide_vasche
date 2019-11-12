@@ -53,6 +53,12 @@ start /min C:\APC3000\temperature.cmd
 node app.js
 ```
 
+Inoltre è possibile eseguire l'avvio degli script all'avvio di Windows, per fare questo una volta creati gli scripts, creare un collegamento al primo script (min.cmd), taglia e incolla all'interno della cartella che appare eseguendo il comando Windows + R : 
+
+```bash
+shell:startup
+```
+
 
 
 ## TODO 
