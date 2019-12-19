@@ -1,7 +1,7 @@
 /**
  * Exide - Vasche / Raddrizzatori SW 
  */
-const version = 'v4.0.0';
+const version = 'v4.1.0';
 
 const fs = require('fs');
 const os = require('os');
@@ -584,6 +584,7 @@ fs.watch(pathReg, (eventType, filename) => {
             input: readStream
           });
 
+          // NEW PHASE 1-12  13-17
           // Two MAX temp one for Phase 1-7 one for phase 8-17
           let maxTempPhaseEightEnd = 0.0;
           let maxTempPhaseOneSeven = 0.0;
@@ -609,14 +610,16 @@ fs.watch(pathReg, (eventType, filename) => {
               if(jsDate < startDate) {
                 startDate = jsDate;
               }
+
+              // TODO NEw PHASE 
               // Compute the MaxT in Phase 1-7 
-              if(phase >= 1 && phase < 8) {
+              if(phase >= 1 && phase < 13) {
                 if(maxTempPhaseOneSeven <= temp) {
                   maxTempPhaseOneSeven = temp;
                 }
               }
               // Compute the MaxT in Phase 8-17
-              if(phase >= 8) {
+              if(phase >= 13) {
                 if(maxTempPhaseEightEnd <= temp) {
                   maxTempPhaseEightEnd = temp;
                 }
@@ -710,16 +713,18 @@ fs.watch(pathRegTemp,(eventType, filename) => {
                     maxTempPhaseOneSeven = 0.0;
                   } 
 
-                  // Handle the  1 < Phase > 8 to search for Temperature MAX 
-                  if(phase > 1 && phase < 8) {
+                  // TODO -------------------------------------------------------------- Handle NEW PHASE
+                  // Handle the  1 < Phase > 13 to search for Temperature MAX 
+                  if(phase > 1 && phase < 13) {
                     let temp = parseFloat(line.trim().split(';')[7].replace(",",".")).toPrecision(4)
                     if(maxTempPhaseOneSeven <= temp) {
                       maxTempPhaseOneSeven = temp;
                     }
                   }
 
-                  // Handle the Phase >= 8 to search for Temperature MAX
-                  if(phase >= 8) {
+                  // TODO -------------------------------------------------------------- Handle NEW PHASE
+                  // Handle the Phase >= 13 to search for Temperature MAX
+                  if(phase >= 13) {
                     let temp = parseFloat(line.trim().split(';')[7].replace(",",".")).toPrecision(4)
                     if(maxTempPhaseEightEnd <= temp) {
                       maxTempPhaseEightEnd = temp;
