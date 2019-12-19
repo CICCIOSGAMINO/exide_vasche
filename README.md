@@ -39,17 +39,27 @@ Nel caso in cui al comando di lancio dell'applicazione o durante il suo funziona
 Gli errori e le eccezzioni che causano l'arresto dell'applicazione sono tracciati all'interno del file di log presente al percorso **/logs/errors.log**. 
 
 
-## Script as a Windows Service
-Script scritto in linguaggio Javascript mandato in running su macchina Windows attraverso Node.js v5.12.0 attraverso la finestra Bash di Windows XP non è la soluzione ideale per un servizio che deve essere attivo 24h su 24h. Una volta gestiti gli eventuali problemi ed eccezzioni in runtime si possono percorrere due strade, la gestione del servizio Windows attraverso l'installazione di un module npm responsabile della creazione e gestione del servizio oppure attraverso la creazione di un task all'interno del Windows Task Scheduler. 
+## Bash & Startup Scripts 
+Per avviare il servizio di elaborazione dati da file della cartella di APC3000, bisogna creare due script, il primo per minimizzare 
+la finestra di bash una volta eseguito lo script e l'altro è lo script che avvia il servizio: 
 
-[Windows Task Scheduler](https://eddyerburgh.me/run-a-node-script-with-windows-task-scheduler): 
-+ Opening Task Scheduler: Start > Control Panel > System & Maintenance > Administrative Tools > Task Scheduler
-+ Opening Task Scheduler: Double-clicking the Taskschd.msc file in the %SYSTEMROOT%\System32
-+ Opening Task Scheduler: Prompt > Taskschd.msc 
+```bash
+# file minimize (min.cmd) 
+start /min C:\APC3000\temperature.cmd
+```
 
-[os-service module](https://www.npmjs.com/package/os-service)
+```bash
+# file launch service (temperature.cmd) 
+node app.js
+```
 
-Install global node-windows 
+Inoltre è possibile eseguire l'avvio degli script all'avvio di Windows, per fare questo una volta creati gli scripts, creare un collegamento al primo script (min.cmd), taglia e incolla all'interno della cartella che appare eseguendo il comando Windows + R : 
+
+```bash
+shell:startup
+```
+
+
 
 ## TODO 
 Here some TODOs to get the grasp for advance in the software features : 
