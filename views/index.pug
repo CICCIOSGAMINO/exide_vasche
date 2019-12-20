@@ -9,7 +9,7 @@ html
         div(class='titlebar')
           div(class='barsvg')
             include exide_white.svg
-          h1 Vasche/Raddrizzatori Fasi(8-17) #{alarmMaxTempEightEnd} C
+          h1 Vasche/Raddrizzatori Fasi(13-17) #{alarmMaxTempEightEnd} C
         if(logged)
           div(class='iconsettings')
             a(href='/params'): img(src="/settings.png")
@@ -61,7 +61,7 @@ html
                   td(class={alarm: row[1][10] >alarmMaxTempEightEnd}) #{row[1][10]}
                   td(class={alarm: row[1][11] >alarmMaxTempEightEnd}) #{row[1][11]}
       div(class='main')
-        h1 Vasche/Raddrizzatori Fasi(1-7) #{alarmMaxTempOneSeven} C
+        h1 Vasche/Raddrizzatori Fasi(1-12) #{alarmMaxTempOneSeven} C
       hr
       h3
         if(dataOneSeven.length === 0)
