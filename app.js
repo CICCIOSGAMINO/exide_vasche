@@ -1,7 +1,7 @@
 /**
  * Exide - Vasche / Raddrizzatori SW 
  */
-const version = 'v4.1.0';
+const version = 'v4.2.0';
 
 const fs = require('fs');
 const os = require('os');
@@ -304,6 +304,7 @@ var tempDurationBlob = [];
 // Set the Temperature MAX (red the background in web page)
 let alarmMaxTempOneSeven = config.alarmMaxTempOneSeven;
 let alarmMaxTempEightEnd = config.alarmMaxTempEightEnd;
+let alarmMin = config.alarmMin;
 let durationh = config.durationh;
 
 // Prevent the Double event on fs.watch 
@@ -377,6 +378,7 @@ app.get('/', (req, res, next) => {
         dataEightEnd: tempEightEndBlob,
         alarmMaxTempOneSeven: alarmMaxTempOneSeven,
         alarmMaxTempEightEnd: alarmMaxTempEightEnd,
+        alarmMin: alarmMin,
         logged: (req.user ? true : false),
         version: version
       })
@@ -412,6 +414,7 @@ app.get("/params", (req, res) => {
   if(req.user) {
     res.render('params', {  tmaxone: alarmMaxTempOneSeven, 
                             tmaxend: alarmMaxTempEightEnd,
+                            tmin: alarmMin,
                             durationh: durationh })
   } else {
     res.render('error404')
@@ -434,10 +437,11 @@ app.get("/create", (req, res) => {
 
 app.post("/save", (req, res) => {
   if(!isNaN(req.body.durationh) && !isNaN(req.body.tmaxone) && !isNaN(req.body.tmaxend)) {
-    durationh = req.body.durationh
-    alarmMaxTempOneSeven = req.body.tmaxone
-    alarmMaxTempEightEnd = req.body.tmaxend
-    updateConfigFile()
+    durationh = req.body.durationh;
+    alarmMin = req.body.tmin;
+    alarmMaxTempOneSeven = req.body.tmaxone;
+    alarmMaxTempEightEnd = req.body.tmaxend;
+    updateConfigFile();
 
     res.redirect("/")
   } else {
@@ -470,6 +474,7 @@ let updateConfigFile = () => {
     user: User,
     alarmMaxTempOneSeven: alarmMaxTempOneSeven,
     alarmMaxTempEightEnd: alarmMaxTempEightEnd,
+    alarmMin: alarmMin,
     durationh: durationh
   }
 

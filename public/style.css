@@ -99,6 +99,10 @@ th, td {
   background-color: #ff3333;
 }
 
+.minalarm {
+	background-color: yellow;
+}
+
 .main {
   background-color: #0759A3;
   padding: 10px 10px;
