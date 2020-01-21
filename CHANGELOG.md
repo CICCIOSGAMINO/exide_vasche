@@ -3,10 +3,13 @@
 <!-- ## Unreleased -->
 <!-- Add new, unreleased items here. -->
 
+## v4.3.0 [20-01-2020]
+- `build`
+  - Arrotondamento a una cifra decimale toPrecision(3) sulla temperatura. 
+
 ## v4.2.0 [17-01-2020]
 - `build`
   - Aggiunto il controllo visivo YELLOW per la temperatura min (40C default)
-  - Arrotondati i valori decimali ti temperatura a 0.5 
   - Bug Fixed
 
 ## v4.1.0 [19-12-2019]

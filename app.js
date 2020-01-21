@@ -511,8 +511,8 @@ fs.watch(pathCsv, (eventType, filename) => {
           if(!isNaN(vasca) && !isNaN(radd)) {
             // Get the hours (to compare, the string to print is durations already ok)
             let durath = parseInt(durations)
-            let tmaxone = parseFloat(tmaxones.replace(',','.')).toPrecision(4)
-            let tmaxend = parseFloat(tmaxends.replace(',','.')).toPrecision(4)
+            let tmaxone = parseFloat(tmaxones.replace(',','.')).toPrecision(3)
+            let tmaxend = parseFloat(tmaxends.replace(',','.')).toPrecision(3)
             // crate a key vasca;radd
             let vascradd = `${vasca};${radd}`
             // get actual value in the map (vasca;radd key) date;
@@ -605,7 +605,7 @@ fs.watch(pathReg, (eventType, filename) => {
             // Check good reading (easy one only on first three fields)
             if(status !== 'undefined' && type !== 'undefined' && nphase !== 'undefined' && !isNaN(jsDate)) {
               let phase = parseInt(nphase);
-              let temp = parseFloat(tbat.replace(',','.')).toPrecision(4);
+              let temp = parseFloat(tbat.replace(',','.')).toPrecision(3);
 
               // Find the Process endDate as starting from 1970 to raise 
               if(jsDate > endDate) {
@@ -721,7 +721,7 @@ fs.watch(pathRegTemp,(eventType, filename) => {
                   // TODO -------------------------------------------------------------- Handle NEW PHASE
                   // Handle the  1 < Phase > 13 to search for Temperature MAX 
                   if(phase > 1 && phase < 13) {
-                    let temp = parseFloat(line.trim().split(';')[7].replace(",",".")).toPrecision(4)
+                    let temp = parseFloat(line.trim().split(';')[7].replace(",",".")).toPrecision(3)
                     if(maxTempPhaseOneSeven <= temp) {
                       maxTempPhaseOneSeven = temp;
                     }
@@ -730,7 +730,7 @@ fs.watch(pathRegTemp,(eventType, filename) => {
                   // TODO -------------------------------------------------------------- Handle NEW PHASE
                   // Handle the Phase >= 13 to search for Temperature MAX
                   if(phase >= 13) {
-                    let temp = parseFloat(line.trim().split(';')[7].replace(",",".")).toPrecision(4)
+                    let temp = parseFloat(line.trim().split(';')[7].replace(",",".")).toPrecision(3)
                     if(maxTempPhaseEightEnd <= temp) {
                       maxTempPhaseEightEnd = temp;
                     }
