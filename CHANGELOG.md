@@ -3,6 +3,10 @@
 <!-- ## Unreleased -->
 <!-- Add new, unreleased items here. -->
 
+## v4.4.0 [10-06-2020]
+- `build`
+  - Fixed raddrizzatore 11 12 
+
 ## v4.3.0 [20-01-2020]
 - `build`
   - Arrotondamento a una cifra decimale toPrecision(3) sulla temperatura. 

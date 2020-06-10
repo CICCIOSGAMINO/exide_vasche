@@ -1,7 +1,7 @@
 /**
  * Exide - Vasche / Raddrizzatori SW 
  */
-const version = 'v4.2.0';
+const version = 'v4.4.0';
 
 const fs = require('fs');
 const os = require('os');
