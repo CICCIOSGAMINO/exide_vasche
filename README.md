@@ -3,7 +3,13 @@ Exide - Vasche / Raddrizzatori T°C Max
 [TOC]
 
 ## Pre Requisiti 
-Il software contenuto in questa cartella può funzionare con Node.js v12.1.1, nelle versioni precedenti la 4.0.0 è possibile trovare anche un file transpilledApp.js utilizzabile con node.js v5.12.0 (Windows XP), la versione node.js v12 deve essere installata sul pc per poter eseguire correttamente il software. La cartella principale in cui copiare gli scripts e le cartelle come descritto di seguito è C:/APO3000/
+Questo sotware è satato sviluppato con l'ambiente di runtime Node.js v12.1.1 (quindi ne è consigliato l'utilizzo), all'interno del progetto è presente anche un file chiamato **transpilledApp.js** che non è altro che il software riadattato in maniera automatica (transpilled) per essere utilizzato con la versione di Node.js v5.12.0 (unica versione utilizzabile in ambiente Windows XP). Per installare la versione di Node.js necessaria fare rifereimento al sito web ufficiale con tutte le release: 
+
+https://nodejs.org/en/download/releases/
+
+Una volta installata una delle due versioni di Node.js per cui è stato testato il software seguire i passi riportati di seguito per installare ed iniziare ad utilizzare il software per la misurazione delle temperature delle vasche. La cartella principale in cui copiare gli scripts sul PC su cui è installto il software di gestione delle vasche è C:/APO3000/ 
+
+Ora le operazioni da fare passo passo:
 
 + File app.js v4.0.0 o superiore
 + Verificare la presenza della cartella /reg/temp con i file .TRR su cui si trovano i dati
