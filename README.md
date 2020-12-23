@@ -7,26 +7,26 @@ Questo sotware è satato sviluppato con l'ambiente di runtime Node.js v12.1.1 (q
 
 https://nodejs.org/en/download/releases/
 
-Una volta installata una delle due versioni di Node.js per cui è stato testato il software seguire i passi riportati di seguito per installare ed iniziare ad utilizzare il software per la misurazione delle temperature delle vasche. La cartella principale in cui copiare gli scripts sul PC su cui è installto il software di gestione delle vasche è C:/APO3000/ 
+Una volta installata una delle due versioni di Node.js per cui è stato testato il software seguire i passi riportati di seguito per installare ed iniziare ad utilizzare il software per la misurazione delle temperature delle vasche. La cartella principale in cui copiare gli scripts sul PC su cui è installto il software di gestione delle vasche è C:/APC3000/ 
 
 Ora le operazioni da fare passo passo:
 
-+ Andare all'interno della cartella C:/APO3000/ 
-+ Verificare la presenza all'interno di C:/APO3000/ della cartella /reg/temp con i file .TRR su cui si trovano i dati
-+ Creare all'interno della cartella C:/APO3000/  di una nuova cartella di nome **views** 
++ Andare all'interno della cartella C:/APC3000/ 
++ Verificare la presenza all'interno di C:/APC3000/ della cartella /reg/temp con i file .TRR su cui si trovano i dati
++ Creare all'interno della cartella C:/APC3000/  di una nuova cartella di nome **views** 
 + Copiare all'interno della nuova cartella appena creata sul PC **views** i file (index.pug, login.pug, params.pug, error404.pug, csv.pug)
-+ Creare all'interno della cartella C:/APO3000/  di una nuova cartella di nome **public**
++ Creare all'interno della cartella C:/APC3000/  di una nuova cartella di nome **public**
 + Copiare all'interno della nuova cartella **public** (style.css, home.png, key.png, csv.png) 
 + Creare una cartella **csv** in cui sarà salvato il file **data.csv** con il riepilogo dei dati sulle lavorazioni delle vasche
-+ Copiare all'interno della cartella principale C:/APO3000/ il file **package.json**
-+ Copiare all'interno della cartella principale C:/APO3000/ il file **app.js**
++ Copiare all'interno della cartella principale C:/APC3000/ il file **package.json**
++ Copiare all'interno della cartella principale C:/APC3000/ il file **app.js**
 
 + Ora bisogna installare i moduli software di cui il software ha bisogno, Alt + Cmd (Aprire Prompt-DOS) ed eseguire i comandi:
 ```bash
-cd C:/APO3000/
+cd C:/APC3000/
 npm install
 ```
-+ Per avviare l'applicazione sempre con il Prompt-DOS di Windows dalla cartella C:/APO3000 eseguire:
++ Per avviare l'applicazione sempre con il Prompt-DOS di Windows dalla cartella C:/APC3000 eseguire:
 ```bash
 # start the application 
 node app.js
