@@ -3,6 +3,9 @@
     "username": "exide",
     "password": "psw@exide"
   },
+  "port": 8080,
+  "plant": "STEP_2",
+  "mode": "dev",
   "alarmMaxTempOneSeven": "66",
   "alarmMaxTempEightEnd": "61",
   "alarmMin": 40,

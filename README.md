@@ -2,12 +2,11 @@ Exide - Vasche / Raddrizzatori T°C Max
 ======================================
 [TOC]
 
-## Pre Requisiti 
-Questo sotware è satato sviluppato con l'ambiente di runtime Node.js v12.1.1 (quindi ne è consigliato l'utilizzo), all'interno del progetto è presente anche un file chiamato **transpilledApp.js** che non è altro che il software riadattato in maniera automatica (transpilled) per essere utilizzato con la versione di Node.js v5.12.0 (unica versione utilizzabile in ambiente Windows XP). Per installare la versione di Node.js necessaria fare rifereimento al sito web ufficiale con tutte le release: 
+v5.0.0 - 18-06-2024
 
-https://nodejs.org/en/download/releases/
+Node.js application per leggere i dati scritti nella cartella ./reg/temp dall'applicazione APC3000 e visuallizarli in applicazione web.
 
-Una volta installata una delle due versioni di Node.js per cui è stato testato il software seguire i passi riportati di seguito per installare ed iniziare ad utilizzare il software per la misurazione delle temperature delle vasche. La cartella principale in cui copiare gli scripts sul PC su cui è installto il software di gestione delle vasche è C:/APC3000/ 
+La cartella principale in cui copiare gli scripts sul PC su cui è installto il software di gestione delle vasche è C:/APC3000/ 
 
 Ora le operazioni da fare passo passo:
 

@@ -1,7 +1,7 @@
 /**
  * Exide - Vasche / Raddrizzatori SW 
  */
-const version = 'v4.4.0';
+const version = 'v5.0.0';
 
 const fs = require('fs');
 const os = require('os');
@@ -13,10 +13,13 @@ const CONFIG_FILE = 'config.json';
 let config = JSON.parse(fs.readFileSync(`./${CONFIG_FILE}`, 'utf8'));
 let User = config.user;
 
+// Load the vasche object
+const v = require('./vasche');
+
 const session = require('express-session');
 const express = require('express');
 const app = express();
-const port = 8080;
+const port = config.port;
 
 // Winston Logger 
 const winston = require('winston');
@@ -47,251 +50,11 @@ const pathReg = path.join(__dirname, 'reg');
 // Path to ../reg/temp
 const pathRegTemp = path.join(__dirname, 'reg', 'temp');
 
-const vasche = [
-  ["1" , {vasca: 301, raddrizzatore: 1}],
-  ["2" , {vasca: 301, raddrizzatore: 2}],
-  ["3" , {vasca: 301, raddrizzatore: 3}],
-  ["4" , {vasca: 301, raddrizzatore: 4}],
-  ["5" , {vasca: 301, raddrizzatore: 5}],
-  ["6" , {vasca: 301, raddrizzatore: 6}],
-  ["7" , {vasca: 301, raddrizzatore: 7}],
-  ["8" , {vasca: 301, raddrizzatore: 8}],
-  ["9" , {vasca: 301, raddrizzatore: 9}],
-  ["10" , {vasca: 301, raddrizzatore: 10}],
-  ["11" , {vasca: 301, raddrizzatore: 11}],
-  ["12" , {vasca: 301, raddrizzatore: 12}],
-  ["13" , {vasca: 302, raddrizzatore: 1}],
-  ["14" , {vasca: 302, raddrizzatore: 2}],
-  ["15" , {vasca: 302, raddrizzatore: 3}],
-  ["16" , {vasca: 302, raddrizzatore: 4}],
-  ["17" , {vasca: 302, raddrizzatore: 5}],
-  ["18" , {vasca: 302, raddrizzatore: 6}],
-  ["19" , {vasca: 302, raddrizzatore: 7}],
-  ["20" , {vasca: 302, raddrizzatore: 8}],
-  ["21" , {vasca: 302, raddrizzatore: 9}],
-  ["22" , {vasca: 302, raddrizzatore: 10}],
-  ["23" , {vasca: 302, raddrizzatore: 11}],
-  ["24" , {vasca: 302, raddrizzatore: 12}],
-  ["25" , {vasca: 303, raddrizzatore: 1}],
-  ["26" , {vasca: 303, raddrizzatore: 2}],
-  ["27" , {vasca: 303, raddrizzatore: 3}],
-  ["28" , {vasca: 303, raddrizzatore: 4}],
-  ["29" , {vasca: 303, raddrizzatore: 5}],
-  ["30" , {vasca: 303, raddrizzatore: 6}],
-  ["31" , {vasca: 303, raddrizzatore: 7}],
-  ["32" , {vasca: 303, raddrizzatore: 8}],
-  ["33" , {vasca: 303, raddrizzatore: 9}],
-  ["34" , {vasca: 303, raddrizzatore: 10}],
-  ["35" , {vasca: 303, raddrizzatore: 11}],
-  ["36" , {vasca: 303, raddrizzatore: 12}],
-  ["37" , {vasca: 304, raddrizzatore: 1}],
-  ["38" , {vasca: 304, raddrizzatore: 2}],
-  ["39" , {vasca: 304, raddrizzatore: 3}],
-  ["40" , {vasca: 304, raddrizzatore: 4}],
-  ["41" , {vasca: 304, raddrizzatore: 5}],
-  ["42" , {vasca: 304, raddrizzatore: 6}],
-  ["43" , {vasca: 304, raddrizzatore: 7}],
-  ["44" , {vasca: 304, raddrizzatore: 8}],
-  ["45" , {vasca: 304, raddrizzatore: 9}],
-  ["46" , {vasca: 304, raddrizzatore: 10}],
-  ["47" , {vasca: 304, raddrizzatore: 11}],
-  ["48" , {vasca: 304, raddrizzatore: 12}],
-  ["49" , {vasca: 305, raddrizzatore: 1}],
-  ["50" , {vasca: 305, raddrizzatore: 2}],
-  ["51" , {vasca: 305, raddrizzatore: 3}],
-  ["52" , {vasca: 305, raddrizzatore: 4}],
-  ["53" , {vasca: 305, raddrizzatore: 5}],
-  ["54" , {vasca: 305, raddrizzatore: 6}],
-  ["55" , {vasca: 305, raddrizzatore: 7}],
-  ["56" , {vasca: 305, raddrizzatore: 8}],
-  ["57" , {vasca: 305, raddrizzatore: 9}],
-  ["58" , {vasca: 305, raddrizzatore: 10}],
-  ["59" , {vasca: 305, raddrizzatore: 11}],
-  ["60" , {vasca: 305, raddrizzatore: 12}],
-  ["61" , {vasca: 306, raddrizzatore: 1}],
-  ["62" , {vasca: 306, raddrizzatore: 2}],
-  ["63" , {vasca: 306, raddrizzatore: 3}],
-  ["64" , {vasca: 306, raddrizzatore: 4}],
-  ["65" , {vasca: 306, raddrizzatore: 5}],
-  ["66" , {vasca: 306, raddrizzatore: 6}],
-  ["67" , {vasca: 306, raddrizzatore: 7}],
-  ["68" , {vasca: 306, raddrizzatore: 8}],
-  ["69" , {vasca: 306, raddrizzatore: 9}],
-  ["70" , {vasca: 306, raddrizzatore: 10}],
-  ["71" , {vasca: 306, raddrizzatore: 11}],
-  ["72" , {vasca: 306, raddrizzatore: 12}],
-  ["73" , {vasca: 307, raddrizzatore: 1}],
-  ["74" , {vasca: 307, raddrizzatore: 2}],
-  ["75" , {vasca: 307, raddrizzatore: 3}],
-  ["76" , {vasca: 307, raddrizzatore: 4}],
-  ["77" , {vasca: 307, raddrizzatore: 5}],
-  ["78" , {vasca: 307, raddrizzatore: 6}],
-  ["79" , {vasca: 307, raddrizzatore: 7}],
-  ["80" , {vasca: 307, raddrizzatore: 8}],
-  ["81" , {vasca: 307, raddrizzatore: 9}],
-  ["82" , {vasca: 307, raddrizzatore: 10}],
-  ["83" , {vasca: 307, raddrizzatore: 11}],
-  ["84" , {vasca: 307, raddrizzatore: 12}],
-  ["85" , {vasca: 308, raddrizzatore: 1}],
-  ["86" , {vasca: 308, raddrizzatore: 2}],
-  ["87" , {vasca: 308, raddrizzatore: 3}],
-  ["88" , {vasca: 308, raddrizzatore: 4}],
-  ["89" , {vasca: 308, raddrizzatore: 5}],
-  ["90" , {vasca: 308, raddrizzatore: 6}],
-  ["91" , {vasca: 308, raddrizzatore: 7}],
-  ["92" , {vasca: 308, raddrizzatore: 8}],
-  ["93" , {vasca: 308, raddrizzatore: 9}],
-  ["94" , {vasca: 308, raddrizzatore: 10}],
-  ["95" , {vasca: 308, raddrizzatore: 11}],
-  ["96" , {vasca: 308, raddrizzatore: 12}],
-  ["97" , {vasca: 309, raddrizzatore: 1}],
-  ["98" , {vasca: 309, raddrizzatore: 2}],
-  ["99" , {vasca: 309, raddrizzatore: 3}],
-  ["100" , {vasca: 309, raddrizzatore: 4}],
-  ["101" , {vasca: 309, raddrizzatore: 5}],
-  ["102" , {vasca: 309, raddrizzatore: 6}],
-  ["103" , {vasca: 309, raddrizzatore: 7}],
-  ["104" , {vasca: 309, raddrizzatore: 8}],
-  ["105" , {vasca: 309, raddrizzatore: 9}],
-  ["106" , {vasca: 309, raddrizzatore: 10}],
-  ["107" , {vasca: 309, raddrizzatore: 11}],
-  ["108" , {vasca: 309, raddrizzatore: 12}],
-  ["109" , {vasca: 310, raddrizzatore: 1}],
-  ["110" , {vasca: 310, raddrizzatore: 2}],
-  ["111" , {vasca: 310, raddrizzatore: 3}],
-  ["112" , {vasca: 310, raddrizzatore: 4}],
-  ["113" , {vasca: 310, raddrizzatore: 5}],
-  ["114" , {vasca: 310, raddrizzatore: 6}],
-  ["115" , {vasca: 310, raddrizzatore: 7}],
-  ["116" , {vasca: 310, raddrizzatore: 8}],
-  ["117" , {vasca: 310, raddrizzatore: 9}],
-  ["118" , {vasca: 310, raddrizzatore: 10}],
-  ["119" , {vasca: 310, raddrizzatore: 11}],
-  ["120" , {vasca: 310, raddrizzatore: 12}],
-  ["121" , {vasca: 311, raddrizzatore: 1}],
-  ["122" , {vasca: 311, raddrizzatore: 2}],
-  ["123" , {vasca: 311, raddrizzatore: 3}],
-  ["124" , {vasca: 311, raddrizzatore: 4}],
-  ["125" , {vasca: 311, raddrizzatore: 5}],
-  ["126" , {vasca: 311, raddrizzatore: 6}],
-  ["127" , {vasca: 311, raddrizzatore: 7}],
-  ["128" , {vasca: 311, raddrizzatore: 8}],
-  ["129" , {vasca: 311, raddrizzatore: 9}],
-  ["130" , {vasca: 311, raddrizzatore: 10}],
-  ["131" , {vasca: 311, raddrizzatore: 11}],
-  ["132" , {vasca: 311, raddrizzatore: 12}],
-  ["133" , {vasca: 312, raddrizzatore: 1}],
-  ["134" , {vasca: 312, raddrizzatore: 2}],
-  ["135" , {vasca: 312, raddrizzatore: 3}],
-  ["136" , {vasca: 312, raddrizzatore: 4}],
-  ["137" , {vasca: 312, raddrizzatore: 5}],
-  ["138" , {vasca: 312, raddrizzatore: 6}],
-  ["139" , {vasca: 312, raddrizzatore: 7}],
-  ["140" , {vasca: 312, raddrizzatore: 8}],
-  ["141" , {vasca: 312, raddrizzatore: 9}],
-  ["142" , {vasca: 312, raddrizzatore: 10}],
-  ["143" , {vasca: 312, raddrizzatore: 11}],
-  ["144" , {vasca: 312, raddrizzatore: 12}],
-  ["145" , {vasca: 313, raddrizzatore: 1}],
-  ["146" , {vasca: 313, raddrizzatore: 2}],
-  ["147" , {vasca: 313, raddrizzatore: 3}],
-  ["148" , {vasca: 313, raddrizzatore: 4}],
-  ["149" , {vasca: 313, raddrizzatore: 5}],
-  ["150" , {vasca: 313, raddrizzatore: 6}],
-  ["151" , {vasca: 313, raddrizzatore: 7}],
-  ["152" , {vasca: 313, raddrizzatore: 8}],
-  ["153" , {vasca: 313, raddrizzatore: 9}],
-  ["154" , {vasca: 313, raddrizzatore: 10}],
-  ["155" , {vasca: 313, raddrizzatore: 11}],
-  ["156" , {vasca: 313, raddrizzatore: 12}],
-  ["157" , {vasca: 314, raddrizzatore: 1}],
-  ["158" , {vasca: 314, raddrizzatore: 2}],
-  ["159" , {vasca: 314, raddrizzatore: 3}],
-  ["160" , {vasca: 314, raddrizzatore: 4}],
-  ["161" , {vasca: 314, raddrizzatore: 5}],
-  ["162" , {vasca: 314, raddrizzatore: 6}],
-  ["163" , {vasca: 314, raddrizzatore: 7}],
-  ["164" , {vasca: 314, raddrizzatore: 8}],
-  ["165" , {vasca: 314, raddrizzatore: 9}],
-  ["166" , {vasca: 314, raddrizzatore: 10}],
-  ["167" , {vasca: 314, raddrizzatore: 11}],
-  ["168" , {vasca: 314, raddrizzatore: 12}],
-  ["169" , {vasca: 315, raddrizzatore: 1}],
-  ["170" , {vasca: 315, raddrizzatore: 2}],
-  ["171" , {vasca: 315, raddrizzatore: 3}],
-  ["172" , {vasca: 315, raddrizzatore: 4}],
-  ["173" , {vasca: 315, raddrizzatore: 5}],
-  ["174" , {vasca: 315, raddrizzatore: 6}],
-  ["175" , {vasca: 315, raddrizzatore: 7}],
-  ["176" , {vasca: 315, raddrizzatore: 8}],
-  ["177" , {vasca: 315, raddrizzatore: 9}],
-  ["178" , {vasca: 315, raddrizzatore: 10}],
-  ["179" , {vasca: 315, raddrizzatore: 11}],
-  ["180" , {vasca: 315, raddrizzatore: 12}],
-  ["181" , {vasca: 316, raddrizzatore: 1}],
-  ["182" , {vasca: 316, raddrizzatore: 2}],
-  ["183" , {vasca: 316, raddrizzatore: 3}],
-  ["184" , {vasca: 316, raddrizzatore: 4}],
-  ["185" , {vasca: 316, raddrizzatore: 5}],
-  ["186" , {vasca: 316, raddrizzatore: 6}],
-  ["187" , {vasca: 316, raddrizzatore: 7}],
-  ["188" , {vasca: 316, raddrizzatore: 8}],
-  ["189" , {vasca: 316, raddrizzatore: 9}],
-  ["190" , {vasca: 316, raddrizzatore: 10}],
-  ["191" , {vasca: 316, raddrizzatore: 11}],
-  ["192" , {vasca: 316, raddrizzatore: 12}],
-  ["193" , {vasca: 317, raddrizzatore: 1}],
-  ["194" , {vasca: 317, raddrizzatore: 2}],
-  ["195" , {vasca: 317, raddrizzatore: 3}],
-  ["196" , {vasca: 317, raddrizzatore: 4}],
-  ["197" , {vasca: 317, raddrizzatore: 5}],
-  ["198" , {vasca: 317, raddrizzatore: 6}],
-  ["199" , {vasca: 317, raddrizzatore: 7}],
-  ["200" , {vasca: 317, raddrizzatore: 8}],
-  ["201" , {vasca: 317, raddrizzatore: 9}],
-  ["202" , {vasca: 317, raddrizzatore: 10}],
-  ["203" , {vasca: 317, raddrizzatore: 11}],
-  ["204" , {vasca: 317, raddrizzatore: 12}],
-  ["205" , {vasca: 318, raddrizzatore: 1}],
-  ["206" , {vasca: 318, raddrizzatore: 2}],
-  ["207" , {vasca: 318, raddrizzatore: 3}],
-  ["208" , {vasca: 318, raddrizzatore: 4}],
-  ["209" , {vasca: 318, raddrizzatore: 5}],
-  ["210" , {vasca: 318, raddrizzatore: 6}],
-  ["211" , {vasca: 318, raddrizzatore: 7}],
-  ["212" , {vasca: 318, raddrizzatore: 8}],
-  ["213" , {vasca: 318, raddrizzatore: 9}],
-  ["214" , {vasca: 318, raddrizzatore: 10}],
-  ["215" , {vasca: 318, raddrizzatore: 11}],
-  ["216" , {vasca: 318, raddrizzatore: 12}],
-  ["217" , {vasca: 319, raddrizzatore: 1}],
-  ["218" , {vasca: 319, raddrizzatore: 2}],
-  ["219" , {vasca: 319, raddrizzatore: 3}],
-  ["220" , {vasca: 319, raddrizzatore: 4}],
-  ["221" , {vasca: 319, raddrizzatore: 5}],
-  ["222" , {vasca: 319, raddrizzatore: 6}],
-  ["223" , {vasca: 319, raddrizzatore: 7}],
-  ["224" , {vasca: 319, raddrizzatore: 8}],
-  ["225" , {vasca: 319, raddrizzatore: 9}],
-  ["226" , {vasca: 319, raddrizzatore: 10}],
-  ["227" , {vasca: 319, raddrizzatore: 11}],
-  ["228" , {vasca: 319, raddrizzatore: 12}],
-  ["229" , {vasca: 320, raddrizzatore: 1}],
-  ["230" , {vasca: 320, raddrizzatore: 2}],
-  ["231" , {vasca: 320, raddrizzatore: 3}],
-  ["232" , {vasca: 320, raddrizzatore: 4}],
-  ["233" , {vasca: 320, raddrizzatore: 5}],
-  ["234" , {vasca: 320, raddrizzatore: 6}],
-  ["235" , {vasca: 320, raddrizzatore: 7}],
-  ["236" , {vasca: 320, raddrizzatore: 8}],
-  ["237" , {vasca: 320, raddrizzatore: 9}],
-  ["238" , {vasca: 320, raddrizzatore: 10}],
-  ["239" , {vasca: 320, raddrizzatore: 11}],
-  ["240" , {vasca: 320, raddrizzatore: 12}]
-];
+// Map with Raddrizzatori ID binding with the Vasca and Raddrizzatore number
+// get the plant from the config file eg. STEP_3 or STEP_2
+const vasche = v[config.plant];
+const vascheMap = new Map(vasche);
 
-// Map with Raddrizzatori ID binding with the Vasca and Raddrizzatore number 
-var vascheMap = new Map(vasche);
 // Map with the Web Data [Vasca, [0, 0, 0, 0, 52.29, 0, 0, 0, 0, 49, 0, 0]]
 var tempPhaseOneSevenMap = new Map();
 var tempPhaseEightEndMap = new Map();
@@ -313,6 +76,7 @@ let doNotDoubleWatchTwo = false;
 let doNotDoubleWatchThree = false;
 
 // -----------------------------------------    OS   -----------------------------------------
+// Running only on windows platform
 let strEncoding = 'utf8';
 if(os.platform() === 'win32') {
   let [dwMajorVersion, dwMinorVersion, dwBuildNumber] = os.release().split(".").map(Number);
@@ -321,12 +85,15 @@ if(os.platform() === 'win32') {
     strEncoding = 'binary';
   }
 } else {
-  infoLogger.info(`@MACHINE >> ${os.platform()}`);
+  infoLogger.info(`@NOT_WIN_MACHINE >> ${os.platform()}`);
+  infoLogger.info(`@STOP >> PROCESS.EXIT(1)`);
+  process.exit(1);
 }
 
 // ----------------------------------------- Passport ----------------------------------------
 // Passport (Authentication)
 var passport = require('passport');
+const { unescape } = require('querystring');
 var LocalStrategy = require('passport-local').Strategy 
 
 passport.use(new LocalStrategy(
@@ -466,12 +233,12 @@ app.listen(port, () => {
   infoLogger.info(`@SERVER >> ACTIVE ON PORT:${port}`)
 });
 
-let tmp = "";
-
 let updateConfigFile = () => {
 
   let newConfig = {
     user: User,
+    plant: config.plant,
+    mode: config.mode,
     alarmMaxTempOneSeven: alarmMaxTempOneSeven,
     alarmMaxTempEightEnd: alarmMaxTempEightEnd,
     alarmMin: alarmMin,

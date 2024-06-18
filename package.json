@@ -1,9 +1,10 @@
 {
   "name": "vasche_raddrizzatori",
-  "version": "4.4.0",
+  "version": "5.0.0",
   "description": "Easy software to read data of Vasche e Raddrizzatori from files TRR",
   "main": "app.js",
   "scripts": {
+    "dev": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -12,11 +13,11 @@
   "author": "@cicciosgamino",
   "license": "MIT",
   "dependencies": {
-    "express": "4.17.3",
-    "express-session": "1.16.1",
-    "passport": "0.6.0",
+    "express": "4.19.2",
+    "express-session": "1.18.0",
+    "passport": "0.7.0",
     "passport-local": "1.0.0",
-    "pug": "3.0.1",
-    "winston": "3.2.1"
+    "pug": "3.0.3",
+    "winston": "3.13.0"
   }
 }
