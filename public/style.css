@@ -1,22 +1,28 @@
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
 body {
-  height: 100vh;
-  margin: 20px 15px;
-  font-family: Arial, Helvetica, sans-serif;
-  text-align: center;
+  	padding: 1rem;
+  	min-height: 100vh;
+  	font-family: Arial, Helvetica, sans-serif;
+  	text-align: center;
 }
 
 h1 {
-  color: whitesmoke;
-  margin: 0;
-  font-size: 1.8em;
-  font-weight: 100;
+  	color: whitesmoke;
+  	margin: 0;
+  	font-size: 1.8em;
+	font-weight: 100;
 } 
 
 .headbar {
 	width: 100%;
 	padding: 1em;
-  overflow: auto;
-  display: block;
+  	overflow: auto;
+  	display: block;
 }
 
 svg {
@@ -30,21 +36,21 @@ svg {
 }
 
 .iconlogin {
-  position: absolute;
-  right: 40px;
-  top: 45px;
+  	position: absolute;
+  	right: 40px;
+  	top: 45px;
 }
 
 .iconlogout {
 	position: absolute;
-  right: 40px;
-  top: 45px;
+  	right: 40px;
+  	top: 45px;
 }
 
 .iconhome {
 	position: absolute;
-  right: 40px;
-  top: 45px;
+  	right: 40px;
+  	top: 45px;
 }
 
 .iconcsv {
@@ -207,48 +213,75 @@ th, td {
 /*  Login  */ 
 .contenitor {
 	display: flex;
-	height: 100vh;
 	justify-content: center;
-	width: 100vw;
-	position: absolute;
-	top: 0; left: 0;
 }
+
 .login {
-	font-size: 1.2em;
+	padding: 1rem;
 	color: whitesmoke;
 	background-color: #0759A3;
-	border-radius: 2px;
-	margin: 20px 20px;
-	padding: 20px 20px;
-	width: 200px;
-	height: 380px;
+}
+
+label {
+	display: block;
+	font-size: 1.5rem;
+}
+
+input {
+	padding: 0.5rem;
+	background: none;
+	border: none;
+	border-bottom: 1px solid whitesmoke;
+
+	text-align: center;
+	color: yellow;
+	font-size: 1.3rem;
+}
+
+input:focus {
+	outline: none;
+	border-bottom: 3px solid yellow;
+}
+
+input::placeholder {
+	color: #bbb;
+	font-size: 1rem;
 }
 
 .form-group {
-	margin: 1em 1em;
+	margin: 2.5rem;
+}
+
+.error-msg p {
+	color: crimson;
 }
 
 .btn {
+	padding: 1rem;
+	margin: 1rem;
+	width: 80%;
+
 	background: none;
 	color: whitesmoke;
 	border: solid whitesmoke 2px;
 	border-radius: 15px;
 	font-size: 14px;
 	font-weight: 500;
-	margin-top: 20px;
-	padding: 10px 10px;
 	text-transform: uppercase;
-	width: 80%;
+
+	cursor: pointer;
 }
 
 .btn:hover {
-	transform: scale(1.02)
+	transform: scale(1.02);
+	background-color: whitesmoke;
+	color: #0759A3;
 }
 
 .btn:active {
 	transform: scale(.98);
-	background-color: whitesmoke;
-	color: #0759A3;
+	background-color: yellow;
+	color: #333;
 }
 
 

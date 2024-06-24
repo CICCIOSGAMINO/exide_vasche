@@ -2,7 +2,9 @@ Exide - Vasche / Raddrizzatori T°C Max
 ======================================
 [TOC]
 
-v5.0.0 - 18-06-2024
+v5.1.0 - 24-06-2024
+
+config.json > mode: dev (@DEV) remove before production
 
 Node.js application per leggere i dati scritti nella cartella ./reg/temp dall'applicazione APC3000 e visuallizarli in applicazione web.
 
@@ -27,11 +29,26 @@ npm install
 ```
 + Per avviare l'applicazione sempre con il Prompt-DOS di Windows dalla cartella C:/APC3000 eseguire:
 ```bash
-# start the application 
+# start the application
 node app.js
 ```
 
 Ora se non sono visualizzati errori o eccezzioni all'interno della finestra dei Prompt-DOS di Windows l'applicazione sta funzionando senza problemi, resta solo da aprire un browser per visualizzare la pagina web con i dati misurati.
+
+# @DEV
+@DEV mode is used to test the software, set the mode in the config.json file:
+
+```json
+{
+  ...
+  "plant": "STEP_2",
+  "mode": "dev",
+  ...
+}
+```
+
+Set in the project directory a folder named **reg** with a folder named **temp** with the .TRR files to test the software.
+
 
 ## Visualizzare Dati attraverso il Browser
 Ora lasciando l'applicazione in funzione e riducendo ad icona la finestra dei Prompt-DOS in cui vengono mostrati i messaggi di funzionamento dell'applicazione, per visualizzare i dati riguardanti i raddrizzatori delle vasche bisogna aprire un browser e inserire l'indirizzo della pagina web locale in cui sono mostrati i dati: 

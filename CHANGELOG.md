@@ -3,7 +3,7 @@
 <!-- ## Unreleased -->
 <!-- Add new, unreleased items here. -->
 
-## v5.0.0 [18-06-2024]
+## v5.1.0 [24-06-2024]
 
 ### Add
   - Handle the vasche as a external module (to handle two different plants)
@@ -11,6 +11,7 @@
 ### Changed
   - Upgrade Development env to Node.js v22.3.0
   - Minor Fix
+  - req.session.destroy() insted of req.logout()
   - update npm winston 3.2.1 > 3.13.0, pug 3.0.1 > 3.0.3, passport 0.6.0 > 0.7.0, express-session 1.16.1 > 1.18.0, 4.17.3 > 4.19.2
 
 ## v4.4.0 [10-06-2020]

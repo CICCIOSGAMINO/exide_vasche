@@ -13,4 +13,7 @@ html
           label(for='password') Password:
           input#password.form-control(type='password' placeholder='password' name='password')
         div.form-group
+        div.error-msg
+          if error
+            p= error
         button.btn(type='submit') Login

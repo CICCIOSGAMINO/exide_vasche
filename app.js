@@ -1,7 +1,7 @@
 /**
  * Exide - Vasche / Raddrizzatori SW 
  */
-const version = 'v5.0.0';
+const version = 'v5.1.0';
 
 const fs = require('fs');
 const os = require('os');
@@ -12,6 +12,8 @@ const readline = require('readline');
 const CONFIG_FILE = 'config.json';
 let config = JSON.parse(fs.readFileSync(`./${CONFIG_FILE}`, 'utf8'));
 let User = config.user;
+
+const devMode = config.mode === 'dev' ? true : false;
 
 // Load the vasche object
 const v = require('./vasche');
@@ -86,8 +88,12 @@ if(os.platform() === 'win32') {
   }
 } else {
   infoLogger.info(`@NOT_WIN_MACHINE >> ${os.platform()}`);
-  infoLogger.info(`@STOP >> PROCESS.EXIT(1)`);
-  process.exit(1);
+
+  if (!devMode) {
+    infoLogger.info(`@STOP >> PROCESS.EXIT(1)`);
+    process.exit(1);
+  }
+  
 }
 
 // ----------------------------------------- Passport ----------------------------------------
@@ -161,16 +167,24 @@ app.get('/csv', (req, res, next) => {
   })
 });
 
+let wrongLogin = 0
 app.get('/login', (req, res) => {
 
   if(req.user) {
+    wrongLogin = 0;
     res.redirect('/')
   } else {
-    res.render('login', {})
+
+    const error = wrongLogin > 0 ? `Wrong email or password (${wrongLogin})` : '';
+    wrongLogin++;
+
+    res.render('login', {
+      error
+    })
   }
 });
 
-app.post("/login", 
+app.post("/login",
   passport.authenticate('local', {  failureRedirect: '/login' }),
   (req, res) => {
     res.redirect('/')
@@ -221,7 +235,7 @@ app.get("/error", (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
-  req.logout()
+  req.session.destroy();
   res.redirect('/')
 });
 
